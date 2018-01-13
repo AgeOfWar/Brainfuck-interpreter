@@ -1,0 +1,37 @@
+group 'me.palazzomichi.brainfuckinterpreter'
+version '1.0'
+
+buildscript {
+    ext.kotlin_version = '1.2.10'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+mainClassName = 'me.palazzomichi.brainfuckinterpreter.MainKt'
+
+sourceCompatibility = 1.8
+
+sourceSets {
+    main.kotlin.srcDirs += 'src/main/kotlin'
+    main.resources.srcDirs += 'src/main/resources'
+    test.kotlin.srcDirs += 'src/test/kotlin'
+    test.resources.srcDirs += 'src/test/resources'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+}
