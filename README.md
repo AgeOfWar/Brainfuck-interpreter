@@ -1,4 +1,4 @@
-# Brainfuck-interpreter
+# Brainfuck Interpreter
 kotlin interpreter for the brainfuck programing language.
 
 ## About Brainfuck
@@ -36,7 +36,7 @@ import static me.palazzomichi.brainfuckinterpreter.BrainfuckInterpreter.brainfuc
 public class BrainfuckTest {
   public static void main(String... args) {
     // program can be either a BrainfuckProgram, a BrainfuckReader, a Reader or a String.
-    brainfuck.execute(program, inputStream, outputStream)
+    brainfuck.execute(program, inputStream, outputStream);
   }
 }
 ```
