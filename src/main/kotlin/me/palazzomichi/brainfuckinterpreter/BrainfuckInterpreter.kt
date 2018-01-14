@@ -18,8 +18,14 @@ class BrainfuckInterpreter(
     }
     
     inner class Context(val input: InputStream, val output: OutputStream) {
-        val cells = this@BrainfuckInterpreter.cells
+        val cells = this@BrainfuckInterpreter.cells.copyOf()
         var index = this@BrainfuckInterpreter.startIndex
+            set(value) {
+                if (value !in cells.indices) {
+                    throw ArrayIndexOutOfBoundsException(value)
+                }
+                field = value
+            }
         
         var currentCell: Byte
             get() = cells[index]
@@ -37,6 +43,8 @@ class BrainfuckInterpreter(
         override fun hashCode() = 31 * Arrays.hashCode(cells) + index
     }
 }
+
+class BrainfuckException(message: String, cause: Throwable? = null) : Exception(message, cause)
 
 val brainfuck = BrainfuckInterpreter()
 

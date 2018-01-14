@@ -32,12 +32,16 @@ data class BrainfuckProgram(val instructions: Array<Instruction>) {
         
         object NextCell : Instruction() {
             override fun execute(context: BrainfuckInterpreter.Context) {
+                if (context.index == context.cells.lastIndex)
+                    throw BrainfuckException("You wanted to go beyond the last cell")
                 context.index++
             }
         }
         
         object PreviousCell : Instruction() {
             override fun execute(context: BrainfuckInterpreter.Context) {
+                if (context.index == 0)
+                    throw BrainfuckException("You wanted to go below the first cell")
                 context.index--
             }
         }
