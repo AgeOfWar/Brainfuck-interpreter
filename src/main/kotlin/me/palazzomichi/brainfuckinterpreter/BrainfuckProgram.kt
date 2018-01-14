@@ -1,6 +1,15 @@
 package me.palazzomichi.brainfuckinterpreter
 
+import me.palazzomichi.brainfuckinterpreter.util.brainfuck
+import java.io.StringWriter
+
 data class BrainfuckProgram(val instructions: Array<Instruction>) {
+    
+    override fun toString(): String {
+        val writer = StringWriter()
+        writer.brainfuck().writeProgram(this)
+        return writer.toString()
+    }
     
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
