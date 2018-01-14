@@ -5,7 +5,6 @@ import me.palazzomichi.brainfuckinterpreter.util.brainfuck
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.Reader
-import java.util.*
 
 class BrainfuckInterpreter(
         val cells: ByteArray = ByteArray(30_000),
@@ -37,10 +36,10 @@ class BrainfuckInterpreter(
             if (this === other) return true
             if (other !is Context) return false
             
-            return Arrays.equals(cells, other.cells) && index == other.index
+            return cells.contentEquals(other.cells) && index == other.index
         }
         
-        override fun hashCode() = 31 * Arrays.hashCode(cells) + index
+        override fun hashCode() = 31 * cells.contentHashCode() + index
     }
 }
 

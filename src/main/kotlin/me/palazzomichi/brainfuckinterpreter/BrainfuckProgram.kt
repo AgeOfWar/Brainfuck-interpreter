@@ -1,16 +1,14 @@
 package me.palazzomichi.brainfuckinterpreter
 
-import java.util.*
-
 data class BrainfuckProgram(val instructions: Array<Instruction>) {
     
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is BrainfuckProgram) return false
-        return Arrays.equals(instructions, other.instructions)
+        return instructions.contentEquals(other.instructions)
     }
     
-    override fun hashCode() = Arrays.hashCode(instructions)
+    override fun hashCode() = instructions.contentHashCode()
     
     operator fun plus(other: BrainfuckProgram) = BrainfuckProgram(instructions + other.instructions)
     operator fun plus(other: Instruction) = BrainfuckProgram(instructions + other)
@@ -56,10 +54,10 @@ data class BrainfuckProgram(val instructions: Array<Instruction>) {
             override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is Loop) return false
-                return Arrays.equals(instructions, other.instructions)
+                return instructions.contentEquals(other.instructions)
             }
     
-            override fun hashCode() = Arrays.hashCode(instructions)
+            override fun hashCode() = instructions.contentHashCode()
         }
         
         object Write : Instruction() {
