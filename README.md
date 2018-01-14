@@ -2,7 +2,7 @@
 kotlin interpreter for the brainfuck programing language.
 
 ## About Brainfuck
-Any character other than `> <+ -., []` is ignored.
+Any character other than `><+-.,[]` is ignored.
 Brainfuck is characterized by an array of 30,000 cells initialized to zero
 and from a pointer pointing to the current cell.
 
