@@ -25,6 +25,12 @@ data class BrainfuckProgram(val instructions: Array<Instruction>) {
     sealed class Instruction {
         abstract fun execute(context: BrainfuckInterpreter.Context)
     
+        override fun toString(): String {
+            val writer = StringWriter()
+            writer.brainfuck().writeInstruction(this)
+            return writer.toString()
+        }
+    
         object Increment : Instruction() {
             override fun execute(context: BrainfuckInterpreter.Context) {
                 context.currentCell++
