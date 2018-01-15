@@ -6,8 +6,19 @@ import java.io.EOFException
 import java.io.Reader
 import java.io.StreamCorruptedException
 
+/**
+ * A character stream that reads a Brainfuck program from a [reader].
+ *
+ * @property reader the reader
+ * @author Michi Palazzo
+ */
 class BrainfuckReader(private val reader: Reader) : Reader() {
     
+    /**
+     * Reads a program from the stream.
+     *
+     * @return the read program
+     */
     fun readProgram(): BrainfuckProgram {
         val instructions = mutableListOf<Instruction>()
         try {
@@ -19,6 +30,11 @@ class BrainfuckReader(private val reader: Reader) : Reader() {
         }
     }
     
+    /**
+     * Reads an instruction from the stream.
+     *
+     * @return the read instruction
+     */
     tailrec fun readInstruction(): Instruction {
         return when (reader.read()) {
             '+'.toInt() -> Instruction.Increment

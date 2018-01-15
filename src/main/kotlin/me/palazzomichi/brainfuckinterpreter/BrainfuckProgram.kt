@@ -1,8 +1,19 @@
 package me.palazzomichi.brainfuckinterpreter
 
+import me.palazzomichi.brainfuckinterpreter.BrainfuckProgram.Instruction
 import me.palazzomichi.brainfuckinterpreter.util.brainfuck
 import java.io.StringWriter
 
+/**
+ * A sequence of [brainfuck instructions][Instruction].
+ *
+ * @property instructions the sequence of instructions
+ * @constructor Creates a [BrainfuckProgram].
+ * @see BrainfuckInterpreter
+ * @see me.palazzomichi.brainfuckinterpreter.stream.BrainfuckReader
+ * @see me.palazzomichi.brainfuckinterpreter.stream.BrainfuckWriter
+ * @author Michi Palazzo
+ */
 data class BrainfuckProgram(val instructions: Array<Instruction>) {
     
     override fun toString(): String {
@@ -22,6 +33,11 @@ data class BrainfuckProgram(val instructions: Array<Instruction>) {
     operator fun plus(other: BrainfuckProgram) = BrainfuckProgram(instructions + other.instructions)
     operator fun plus(other: Instruction) = BrainfuckProgram(instructions + other)
     
+    /**
+     * A Brainfuck instruction.
+     *
+     * @author Michi Palazzo
+     */
     sealed class Instruction {
         abstract fun execute(context: BrainfuckInterpreter.Context)
     
@@ -30,7 +46,7 @@ data class BrainfuckProgram(val instructions: Array<Instruction>) {
             writer.brainfuck().writeInstruction(this)
             return writer.toString()
         }
-    
+        
         object Increment : Instruction() {
             override fun execute(context: BrainfuckInterpreter.Context) {
                 context.currentCell++
