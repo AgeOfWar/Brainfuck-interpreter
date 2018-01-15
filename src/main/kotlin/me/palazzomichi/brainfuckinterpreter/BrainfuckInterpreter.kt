@@ -32,36 +32,21 @@ class BrainfuckInterpreter(
      * for example if you try to go below the first cell
      */
     fun execute(program: BrainfuckProgram, input: InputStream, output: OutputStream): OutputStream {
-        val context = Context(input, output)
+        val context = State(BrainfuckProgram.State(cells.copyOf(), startIndex), input, output)
         program.instructions.forEach { it.execute(context) }
         return output
     }
     
-    inner class Context(val input: InputStream, val output: OutputStream) {
-        val cells = this@BrainfuckInterpreter.cells.copyOf()
-        var index = this@BrainfuckInterpreter.startIndex
-            set(value) {
-                if (value !in cells.indices) {
-                    throw ArrayIndexOutOfBoundsException(value)
-                }
-                field = value
-            }
-        
-        var currentCell: Byte
-            get() = cells[index]
-            set(value) {
-                cells[index] = value
-            }
-        
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other !is Context) return false
-            
-            return cells.contentEquals(other.cells) && index == other.index
-        }
-        
-        override fun hashCode() = 31 * cells.contentHashCode() + index
-    }
+    /**
+     * The state of the execution of a [BrainfuckProgram].
+     *
+     * @property state  the program state
+     * @property input  input stream of the program
+     * @property output the output stream of the program
+     */
+    data class State(val state: BrainfuckProgram.State,
+                     val input: InputStream,
+                     val output: OutputStream)
 }
 
 /**
