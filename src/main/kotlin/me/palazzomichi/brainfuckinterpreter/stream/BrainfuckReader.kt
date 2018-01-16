@@ -23,10 +23,10 @@ class BrainfuckReader(private val reader: Reader) : Reader() {
         val instructions = mutableListOf<Instruction>()
         try {
             while (true) {
-                instructions.add(readInstruction())
+                instructions += readInstruction()
             }
         } catch (e: EOFException) {
-            return BrainfuckProgram(instructions.toTypedArray())
+            return BrainfuckProgram(instructions)
         }
     }
     
@@ -54,10 +54,10 @@ class BrainfuckReader(private val reader: Reader) : Reader() {
         val instructions = mutableListOf<Instruction>()
         try {
             while (true) {
-                instructions.add(readInstruction())
+                instructions += readInstruction()
             }
         } catch (e: StreamCorruptedException) {
-            return Instruction.Loop(instructions.toTypedArray())
+            return Instruction.Loop(instructions)
         } catch (e: EOFException) {
             throw StreamCorruptedException("Unmatched '['")
         }

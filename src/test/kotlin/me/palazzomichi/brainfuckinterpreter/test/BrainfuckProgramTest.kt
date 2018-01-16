@@ -21,10 +21,10 @@ typealias Out = BrainfuckProgram.Instruction.Write
 typealias In = BrainfuckProgram.Instruction.Read
 
 fun program(vararg instructions: BrainfuckProgram.Instruction) =
-        BrainfuckProgram(arrayOf(*instructions))
+        BrainfuckProgram(listOf(*instructions))
 
 fun loop(vararg instructions: BrainfuckProgram.Instruction) =
-        Loop(arrayOf(*instructions))
+        Loop(listOf(*instructions))
 
 class BrainfuckProgramTest {
     

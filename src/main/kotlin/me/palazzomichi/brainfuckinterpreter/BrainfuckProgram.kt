@@ -14,20 +14,12 @@ import java.io.StringWriter
  * @see me.palazzomichi.brainfuckinterpreter.stream.BrainfuckWriter
  * @author Michi Palazzo
  */
-data class BrainfuckProgram(val instructions: Array<Instruction>) {
+data class BrainfuckProgram(val instructions: List<Instruction>) {
     override fun toString(): String {
         val writer = StringWriter()
         writer.brainfuck().writeProgram(this)
         return writer.toString()
     }
-    
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is BrainfuckProgram) return false
-        return instructions.contentEquals(other.instructions)
-    }
-    
-    override fun hashCode() = instructions.contentHashCode()
     
     operator fun plus(other: BrainfuckProgram) = BrainfuckProgram(instructions + other.instructions)
     operator fun plus(other: Instruction) = BrainfuckProgram(instructions + other)
@@ -74,20 +66,12 @@ data class BrainfuckProgram(val instructions: Array<Instruction>) {
             }
         }
         
-        data class Loop(val instructions: Array<Instruction>) : Instruction() {
+        data class Loop(val instructions: List<Instruction>) : Instruction() {
             override fun execute(context: BrainfuckInterpreter.State) {
                 while (context.state.currentCell != 0.toByte()) {
                     instructions.forEach { it.execute(context) }
                 }
             }
-    
-            override fun equals(other: Any?): Boolean {
-                if (this === other) return true
-                if (other !is Loop) return false
-                return instructions.contentEquals(other.instructions)
-            }
-    
-            override fun hashCode() = instructions.contentHashCode()
         }
         
         object Write : Instruction() {
