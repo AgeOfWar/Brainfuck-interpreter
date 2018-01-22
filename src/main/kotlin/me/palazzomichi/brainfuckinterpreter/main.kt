@@ -1,5 +1,6 @@
 package me.palazzomichi.brainfuckinterpreter
 
+import me.palazzomichi.brainfuckinterpreter.util.execute
 import java.io.FileReader
 
 fun main(args: Array<String>) {
@@ -9,6 +10,7 @@ fun main(args: Array<String>) {
     
     val path = args[0]
     val reader = FileReader(path)
-    brainfuck.execute(reader, System.`in`, System.out)
+    val brainfuck = BrainfuckInterpreter(System.`in`, System.out)
+    brainfuck.execute(reader)
     System.out.flush()
 }

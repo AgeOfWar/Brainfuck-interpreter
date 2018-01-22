@@ -2,6 +2,7 @@ package me.palazzomichi.brainfuckinterpreter.test
 
 import me.palazzomichi.brainfuckinterpreter.BrainfuckInterpreter
 import me.palazzomichi.brainfuckinterpreter.BrainfuckProgram
+import me.palazzomichi.brainfuckinterpreter.cellIterator
 import me.palazzomichi.brainfuckinterpreter.util.EmptyInputStream
 import me.palazzomichi.brainfuckinterpreter.util.EmptyOutputStream
 import org.junit.Assert.assertArrayEquals
@@ -32,37 +33,37 @@ class BrainfuckProgramTest {
     
         class IncrementTest {
             @Test fun testExecute() {
-                val state = BrainfuckProgram.State(byteArrayOf(1, 0), 0)
-                val context = BrainfuckInterpreter.State(state, EmptyInputStream, EmptyOutputStream)
-                Inc.execute(context)
-                assertArrayEquals(byteArrayOf(2, 0), context.state.cells)
+                val cells = byteArrayOf(1, 0)
+                val config = BrainfuckInterpreter.Configuration(EmptyInputStream, EmptyOutputStream)
+                Inc.execute(cells.cellIterator(), config)
+                assertArrayEquals(byteArrayOf(2, 0), cells)
             }
         }
     
         class DecrementTest {
             @Test fun testExecute() {
-                val state = BrainfuckProgram.State(byteArrayOf(1, 0), 0)
-                val context = BrainfuckInterpreter.State(state, EmptyInputStream, EmptyOutputStream)
-                Dec.execute(context)
-                assertArrayEquals(byteArrayOf(0, 0), context.state.cells)
+                val cells = byteArrayOf(1, 0)
+                val config = BrainfuckInterpreter.Configuration(EmptyInputStream, EmptyOutputStream)
+                Dec.execute(cells.cellIterator(), config)
+                assertArrayEquals(byteArrayOf(0, 0), cells)
             }
         }
     
         class NextCellTest {
             @Test fun testExecute() {
-                val state = BrainfuckProgram.State(byteArrayOf(1, 0), 0)
-                val context = BrainfuckInterpreter.State(state, EmptyInputStream, EmptyOutputStream)
-                Next.execute(context)
-                assertEquals(0, context.state.currentCell)
+                val cells = byteArrayOf(1, 0).cellIterator()
+                val config = BrainfuckInterpreter.Configuration(EmptyInputStream, EmptyOutputStream)
+                Next.execute(cells, config)
+                assertEquals(0, cells.current)
             }
         }
     
         class PreviousCellTest {
             @Test fun testExecute() {
-                val state = BrainfuckProgram.State(byteArrayOf(1, 0), 1)
-                val context = BrainfuckInterpreter.State(state, EmptyInputStream, EmptyOutputStream)
-                Prev.execute(context)
-                assertEquals(1, context.state.currentCell)
+                val cells = byteArrayOf(1, 0).cellIterator(1)
+                val config = BrainfuckInterpreter.Configuration(EmptyInputStream, EmptyOutputStream)
+                Prev.execute(cells, config)
+                assertEquals(1, cells.current)
             }
         }
     
@@ -75,9 +76,10 @@ class BrainfuckProgramTest {
                     }
                 }
                 val iterations = 5.toByte()
-                val state = BrainfuckProgram.State(byteArrayOf(iterations, 0), 0)
-                val context = BrainfuckInterpreter.State(state, EmptyInputStream, output)
-                loop(Out, Dec).execute(context)
+                val state = byteArrayOf(iterations, 0)
+                val cells = state.cellIterator()
+                val config = BrainfuckInterpreter.Configuration(EmptyInputStream, output)
+                loop(Out, Dec).execute(cells, config)
                 assertEquals(iterations, output.iterations)
             }
         
@@ -85,9 +87,9 @@ class BrainfuckProgramTest {
                 val output = object : OutputStream() {
                     override fun write(b: Int) = fail()
                 }
-                val state = BrainfuckProgram.State(byteArrayOf(1, 0), 1)
-                val context = BrainfuckInterpreter.State(state, EmptyInputStream, output)
-                loop(Out).execute(context)
+                val cells = byteArrayOf(1, 0).cellIterator(1)
+                val config = BrainfuckInterpreter.Configuration(EmptyInputStream, output)
+                loop(Out).execute(cells, config)
             }
         }
     
@@ -95,9 +97,9 @@ class BrainfuckProgramTest {
             @Test fun testExecute() {
                 val value = 7.toByte()
                 val output = ByteArrayOutputStream()
-                val state = BrainfuckProgram.State(byteArrayOf(value, 0), 0)
-                val context = BrainfuckInterpreter.State(state, EmptyInputStream, output)
-                Out.execute(context)
+                val cells = byteArrayOf(value, 0)
+                val config = BrainfuckInterpreter.Configuration(EmptyInputStream, output)
+                Out.execute(cells.cellIterator(), config)
                 assertArrayEquals(byteArrayOf(value), output.toByteArray())
             }
         }
@@ -106,17 +108,17 @@ class BrainfuckProgramTest {
             @Test fun testExecute() {
                 val value = 7.toByte()
                 val input = ByteArrayInputStream(byteArrayOf(value))
-                val state = BrainfuckProgram.State(byteArrayOf(1, 0), 0)
-                val context = BrainfuckInterpreter.State(state, input, EmptyOutputStream)
-                In.execute(context)
-                assertArrayEquals(byteArrayOf(value, 0), context.state.cells)
+                val cells = byteArrayOf(1, 0)
+                val config = BrainfuckInterpreter.Configuration(input, EmptyOutputStream)
+                In.execute(cells.cellIterator(), config)
+                assertArrayEquals(byteArrayOf(value, 0), cells)
             }
         
             @Test fun testExecuteEmptyStream() {
-                val state = BrainfuckProgram.State(byteArrayOf(1, 0), 0)
-                val context = BrainfuckInterpreter.State(state, EmptyInputStream, EmptyOutputStream)
-                In.execute(context)
-                assertArrayEquals(byteArrayOf(0, 0), context.state.cells)
+                val cells = byteArrayOf(1, 0)
+                val config = BrainfuckInterpreter.Configuration(EmptyInputStream, EmptyOutputStream)
+                In.execute(cells.cellIterator(), config)
+                assertArrayEquals(byteArrayOf(0, 0), cells)
             }
         }
     

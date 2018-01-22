@@ -22,21 +22,25 @@ This runs a single Brainfuck file specified as a command-line parameter. Standar
 ## Use as a library
 ### Kotlin
 ```kotlin
-import me.palazzomichi.brainfuckinterpreter.brainfuck
+import me.palazzomichi.brainfuckinterpreter.BrainfuckInterpreter
 
 fun main(args: Array<String>) {
+    // [...]
+    val brainfuck = BrainfuckInterpreter(inputStream, outputStream)
     // program can be either a BrainfuckProgram, a BrainfuckReader, a Reader or a String.
-    brainfuck.execute(program, inputStream, outputStream)
+    brainfuck.execute(program)
 }
 ```
 ### Java
 ```java
-import static me.palazzomichi.brainfuckinterpreter.BrainfuckInterpreter.brainfuck;
+import me.palazzomichi.brainfuckinterpreter.BrainfuckInterpreter;
 
 public class BrainfuckTest {
   public static void main(String... args) {
+    // [...]
+    BrainfuckInterpreter brainfuck = new BrainfuckInterpreter(inputStream, outputStream);
     // program can be either a BrainfuckProgram, a BrainfuckReader, a Reader or a String.
-    brainfuck.execute(program, inputStream, outputStream);
+    brainfuck.execute(program);
   }
 }
 ```

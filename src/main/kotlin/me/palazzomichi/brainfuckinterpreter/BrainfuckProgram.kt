@@ -1,5 +1,6 @@
 package me.palazzomichi.brainfuckinterpreter
 
+import me.palazzomichi.brainfuckinterpreter.BrainfuckInterpreter.Configuration
 import me.palazzomichi.brainfuckinterpreter.BrainfuckProgram.Instruction
 import me.palazzomichi.brainfuckinterpreter.util.brainfuck
 import java.io.StringWriter
@@ -30,7 +31,7 @@ data class BrainfuckProgram(val instructions: List<Instruction>) {
      * @author Michi Palazzo
      */
     sealed class Instruction {
-        abstract fun execute(context: BrainfuckInterpreter.State)
+        abstract fun execute(cells: CellIterator, configuration: Configuration)
     
         override fun toString(): String {
             val writer = StringWriter()
@@ -39,75 +40,52 @@ data class BrainfuckProgram(val instructions: List<Instruction>) {
         }
         
         object Increment : Instruction() {
-            override fun execute(context: BrainfuckInterpreter.State) {
-                context.state.currentCell++
+            override fun execute(cells: CellIterator, configuration: Configuration) {
+                cells.current++
             }
         }
         
         object Decrement : Instruction() {
-            override fun execute(context: BrainfuckInterpreter.State) {
-                context.state.currentCell--
+            override fun execute(cells: CellIterator, configuration: Configuration) {
+                cells.current--
             }
         }
         
         object NextCell : Instruction() {
-            override fun execute(context: BrainfuckInterpreter.State) {
-                if (context.state.index == context.state.cells.lastIndex)
+            override fun execute(cells: CellIterator, configuration: Configuration) {
+                if (!cells.hasNext())
                     throw BrainfuckException("You wanted to go beyond the last cell")
-                context.state.index++
+                cells.next()
             }
         }
         
         object PreviousCell : Instruction() {
-            override fun execute(context: BrainfuckInterpreter.State) {
-                if (context.state.index == 0)
+            override fun execute(cells: CellIterator, configuration: Configuration) {
+                if (!cells.hasPrevious())
                     throw BrainfuckException("You wanted to go below the first cell")
-                context.state.index--
+                cells.previous()
             }
         }
         
         data class Loop(val instructions: List<Instruction>) : Instruction() {
-            override fun execute(context: BrainfuckInterpreter.State) {
-                while (context.state.currentCell != 0.toByte()) {
-                    instructions.forEach { it.execute(context) }
+            override fun execute(cells: CellIterator, configuration: Configuration) {
+                while (cells.current != 0.toByte()) {
+                    instructions.forEach { it.execute(cells, configuration) }
                 }
             }
         }
         
         object Write : Instruction() {
-            override fun execute(context: BrainfuckInterpreter.State) {
-                context.output.write(context.state.currentCell.toInt())
+            override fun execute(cells: CellIterator, configuration: Configuration) {
+                configuration.outputStream.write(cells.current.toInt())
             }
         }
         
         object Read : Instruction() {
-            override fun execute(context: BrainfuckInterpreter.State) {
-                val b = context.input.read()
-                context.state.currentCell = if (b == -1) 0 else b.toByte()
+            override fun execute(cells: CellIterator, configuration: Configuration) {
+                val b = configuration.inputStream.read()
+                cells.current = if (b == -1) 0 else b.toByte()
             }
         }
-    }
-    
-    /**
-     * The state of a [BrainfuckProgram].
-     *
-     * @property cells the cells state
-     * @property index the index of the cell pointer
-     */
-    data class State(val cells: ByteArray, var index: Int) {
-        
-        var currentCell: Byte
-            get() = cells[index]
-            set(value) {
-                cells[index] = value
-            }
-        
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other !is State) return false
-            return cells.contentEquals(other.cells) && index == other.index
-        }
-        
-        override fun hashCode() = 31 * cells.contentHashCode() + index
     }
 }
