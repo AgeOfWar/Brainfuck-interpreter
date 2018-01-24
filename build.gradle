@@ -35,3 +35,13 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
