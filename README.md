@@ -18,6 +18,12 @@ There are eight commands:
 
 ## Use as a binary
 This runs a single Brainfuck file specified as a command-line parameter. Standard in and out are passed to the interpreter.
+```text
+    Usage: [-fsi] <program>
+        -f --file       run brainfuck file
+        -s --string     run code directly
+        -i --infinite   run without cell limits
+```
 
 ## Use as a library
 ### Kotlin
