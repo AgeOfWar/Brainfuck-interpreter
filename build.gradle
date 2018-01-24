@@ -40,8 +40,20 @@ jar {
     manifest {
         attributes 'Main-Class': mainClassName
     }
-
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
 }
+
+// lib with dependencies jar
+task fatJar(type: Jar) {
+    classifier = 'with-dependencies'
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest { attributes 'Main-Class': mainClassName }
+    with jar
+}
+
+// add source jar
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+build.dependsOn fatJar, sourcesJar
