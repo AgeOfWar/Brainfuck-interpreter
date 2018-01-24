@@ -1,5 +1,7 @@
 package me.palazzomichi.brainfuckinterpreter
 
+import java.util.*
+
 private const val STANDARD_CELL_NUMBER = 30_000
 
 interface CellIterator {
@@ -12,6 +14,7 @@ interface CellIterator {
     
     companion object {
         fun default() = ByteArray(STANDARD_CELL_NUMBER).cellIterator()
+        fun infinite() = LinkedList<Byte>().cellIterator()
     }
 }
 
