@@ -43,6 +43,10 @@ class InfiniteCellIterator(
         private val cells: MutableList<Byte>,
         private var pos: Int = 0
 ) : CellIterator {
+    init {
+        ensureCapacity()
+    }
+    
     override var current: Byte
         get() = cells[pos]
         set(value) {
